@@ -20,6 +20,9 @@ notifications:
     on_failure: always  # options: [always|never|change] default: always
     on_start: never     # options: [always|never|change] default: always
 
+before_script:
+  - julia -e 'Pkg.clone("https://github.com/sadit/SimilaritySearch.jl")'
+  
 # uncomment the following lines to override the default test script
 #script:
 #  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
