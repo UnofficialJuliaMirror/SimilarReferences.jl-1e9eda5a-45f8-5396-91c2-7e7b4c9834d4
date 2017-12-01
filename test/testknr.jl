@@ -18,6 +18,15 @@ function test_vectors(create_index, dist, ksearch, nick)
         p = probe(perf, index, use_distances=false)
         @show dist, p
         @test p.recall > 0.8
+
+        info("adding more items")
+        for item in queries
+            push!(index, item)
+        end
+        perf = Performance(index.db, dist, queries, expected_k=1)
+        p = probe(perf, index, use_distances=false)
+        @show dist, p
+        @test p.recall > 0.999
         return p
     end
 end
@@ -43,10 +52,19 @@ function test_sequences(create_index, dist, ksearch, nick)
 
         info("inserting items into the index")
         index = create_index(db)
-        optimize!(index, recall=0.9, k=10, use_distances=true)
+        # optimize!(index, recall=0.9, k=10, use_distances=true)
         perf = Performance(index.db, dist, queries, expected_k=10)
         p = probe(perf, index, use_distances=true)
         @show dist, p
+        @test p.recall > 0.6
+
+        for item in queries
+            push!(index, item)
+        end
+        perf = Performance(index.db, dist, queries, expected_k=1)
+        p = probe(perf, index, use_distances=true)
+        @show dist, p
+        @test p.recall > 0.999
         return p
     end
 end
