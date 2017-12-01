@@ -13,8 +13,9 @@ function test_vectors(create_index, dist, ksearch, nick)
         queries = [rand(Float32, dim) for i in 1:m]
 
         index = create_index(db)
-        # optimize!(index, recall=0.9, use_distances=true)
-        @test length(index.db) == n
+        # testing pushes
+        push!(index, rand(Float32, dim))
+        @test length(index.db) == n + 1
         perf = Performance(index.db, dist, queries, expected_k=10)
         p = probe(perf, index, use_distances=false)
         @show dist, p

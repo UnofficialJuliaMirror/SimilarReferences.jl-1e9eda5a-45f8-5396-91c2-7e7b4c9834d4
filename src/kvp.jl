@@ -27,6 +27,7 @@ mutable struct Kvp{T, D} <: Index
     dist::D
     refs::Vector{T}
     sparsetable::Vector{Vector{Item}}
+    k::Int
 end
 
 function Kvp(db::Vector{T}, dist::D, k::Int, refList::Vector{Int}) where {T,D}
@@ -42,7 +43,7 @@ function Kvp(db::Vector{T}, dist::D, k::Int, refList::Vector{Int}) where {T,D}
         push!(sparsetable, row)
     end
 
-    return Kvp(db, dist, refs, sparsetable)
+    return Kvp(db, dist, refs, sparsetable, k)
 end
 
 function Kvp(db::Vector{T}, dist::D, k::Int, numrefs::Int) where {T,D}
