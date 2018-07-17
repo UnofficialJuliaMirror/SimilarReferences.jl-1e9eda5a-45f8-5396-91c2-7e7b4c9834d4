@@ -1,6 +1,6 @@
 using SimilaritySearch
 using SimilarReferences
-using Base.Test
+using Test
 
 
 function test_vectors(create_index, dist, ksearch, nick)
@@ -19,7 +19,7 @@ function test_vectors(create_index, dist, ksearch, nick)
         @show dist, p
         @test p.recall > 0.8
 
-        info("adding more items")
+        @info "adding more items"
         for item in queries
             push!(index, item)
         end
@@ -50,7 +50,7 @@ function test_sequences(create_index, dist, ksearch, nick)
         db = [create_item() for i in 1:n]
         queries = [create_item() for i in 1:m]
 
-        info("inserting items into the index")
+        @info "inserting items into the index"
         index = create_index(db)
         # optimize!(index, recall=0.9, k=10, use_distances=true)
         perf = Performance(index.db, dist, queries, expected_k=10)

@@ -13,6 +13,7 @@
 #    limitations under the License.
 
 using SimilaritySearch
+using Dates
 
 import SimilaritySearch:
     search
@@ -33,14 +34,14 @@ mutable struct Knr{T, D} <: Index
 end
 
 function Knr(db::Vector{T}, dist::D, refs::Vector{T}, k::Int, minmatches::Int=1) where {T,D}
-    info("Knr> refs=$(typeof(db)), k=$(k), numrefs=$(length(refs)), dist=$(dist)")
-    invindex = [Vector{Int32}(0) for i in 1:length(refs)]
+    @info "Knr> refs=$(typeof(db)), k=$(k), numrefs=$(length(refs)), dist=$(dist)"
+    invindex = [Vector{Int32}(undef, 0) for i in 1:length(refs)]
     seqindex = Sequential(refs, dist)
 
     pc = round(Int, length(db) / 20)
     for i=1:length(db)
         if i % pc == 0
-            info("Knr> advance $(round(i/length(db), 4)), now: $(now())")
+            @info "Knr> advance $(round(i/length(db), digits=4)), now: $(now())"
         end
 
         res = search(seqindex, db[i], KnnResult(k))
@@ -95,7 +96,7 @@ function push!(index::Knr{T, D}, obj::T) where {T,D}
 end
 
 function optimize!(index::Knr{T, D}; recall::Float64=0.9, k::Int=1, numqueries::Int=128, use_distances::Bool=false) where {T,D}
-    info("Knr> optimizing index for recall=$(recall)")
+    @info "Knr> optimizing index for recall=$(recall)"
     perf = Performance(index.db, index.dist; numqueries=numqueries, expected_k=k)
     index.minmatches = 1
     index.ksearch = 1
@@ -103,11 +104,11 @@ function optimize!(index::Knr{T, D}; recall::Float64=0.9, k::Int=1, numqueries::
 
     while p.recall < recall && index.ksearch < length(index.refs)
         index.ksearch += 1
-        info("Knr> opt step ksearch=$(index.ksearch), performance $(p)")
+        @info "Knr> opt step ksearch=$(index.ksearch), performance $(p)"
         p = probe(perf, index, use_distances=use_distances)
 
     end
-    info("Knr> reached performance $(p)")
+    @info "Knr> reached performance $(p)"
     return index
 end
 

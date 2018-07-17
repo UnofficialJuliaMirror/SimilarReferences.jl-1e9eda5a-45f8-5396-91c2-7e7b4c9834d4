@@ -31,12 +31,12 @@ mutable struct Kvp{T, D} <: Index
 end
 
 function Kvp(db::Vector{T}, dist::D, k::Int, refList::Vector{Int}) where {T,D}
-    info("Kvp, refs=$(typeof(db)), k=$(k), numrefs=$(length(refList)), dist=$(dist)")
+    @info "Kvp, refs=$(typeof(db)), k=$(k), numrefs=$(length(refList)), dist=$(dist)"
     sparsetable = Vector{Item}[]
     refs = [db[x] for x in refList]
     for i=1:length(db)
         if (i % 10000) == 0
-            info("advance $(i)/$(length(db))")
+            @info "advance $(i)/$(length(db))"
         end
         row = near_and_far(db[i], refs, k, dist)
         # println(row)
@@ -60,7 +60,7 @@ function near_and_far(obj::T, refs::Vector{T}, k::Int, dist::D) where {T,D}
         push!(far, refID, -d)
     end
 
-    row = Vector{Item}(k+k)
+    row = Vector{Item}(undef, k+k)
     for (j, item) in enumerate(near)
         row[j] = item
     end

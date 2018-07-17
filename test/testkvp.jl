@@ -1,6 +1,6 @@
 using SimilaritySearch
 using SimilarReferences
-using Base.Test
+using Test
 
 
 function test_vectors(create_index, dist, ksearch, nick)
@@ -42,11 +42,10 @@ function test_sequences(create_index, dist, ksearch, nick)
         db = [create_item() for i in 1:n]
         queries = [create_item() for i in 1:m]
 
-        info("inserting items into the index")
+        @info "inserting items into the index"
         # index = Laesa(db, dist, σ)
         index = create_index(db)
         # optimize!(index, recall=0.9, use_distances=true)
-        # info("done; now testing")
         @test length(index.db) == n
         perf = Performance(index.db, dist, queries, expected_k=10)
         p = probe(perf, index, use_distances=true)
