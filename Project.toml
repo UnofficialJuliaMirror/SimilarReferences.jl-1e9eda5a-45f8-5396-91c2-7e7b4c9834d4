@@ -1,0 +1,8 @@
+name = "SimilarReferences"
+uuid = "07ef92f2-8af5-11e8-3aad-53570d4c83f4"
+authors = ["Eric S. Tellez <donsadit@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+SimilaritySearch = "7eee491e-8ade-11e8-359b-2102e3160632"
